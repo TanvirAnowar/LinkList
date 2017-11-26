@@ -2,193 +2,162 @@
 
 require('ListNode.class.php');
 
-class LinkedList // implements Iterator 
-{			
-	private $_firstNode = NULL;
-	private $_current = NULL;
-	private $_position = 0;
-	public $_count = 0;
-	
-	// Constructor
-	// Input: Array of values (Optional)
-	public function __construct($values = array())
-	{
-	//	$this->_firstNode = null;
-		
-		
-		foreach ($values as $value) {			
-			$this->add($value);
-		}	
+class LinkedList
+{
+    protected $first = NULL;
+    protected $current = NULL;
+    protected $count = 0;
 
-	
-		
-	}
-	
-	// Add a node at the beginning of the list
-	public function add($value)
-	{
-		$newNode = new ListNode($value);
+    // Constructor
+    // Input: Array of values (Optional)
+    public function __construct($values = array())
+    {
+        foreach ($values as $value) {
+            $this->add($value);
+        }
+    }
 
-				if ( $this->_firstNode !== NULL ) {
-			$newNode->next = $this->_firstNode;
-		}
+    // Add a node at the beginning of the list
+    public function add($value)
+    {
+        $newNode = new ListNode($value);
 
-		$this->_firstNode = &$newNode;
-
-		$this->_count++;
-
-		return TRUE;
-		
-	}
-	
-	// Add a node at the specified index
-	public function addAtIndex($value, $index)
-	{
-		$newNode = new ListNode($value);
-
-		if($index == 0){
-        
-   		}elseif($this->sizeof()<$index){
-   			throw new Exception("Invalid Index");
-   		}
-   		else{
-      //  $link = new ListNode($NewItem);
-        $current = $this->_firstNode;
-        $previous = $this->_firstNode;
-
-        for($i=0;$i<$index;$i++)
-        {       
-                $previous = $current;
-                $current = $current->next;
+        if ( $this->first !== NULL ) {
+            $newNode->next = $this->first;
         }
 
-           $previous->next = $newNode;
-           $newNode->next = $current; 
-           $this->_count++;
+        $this->first = &$newNode;
+
+        $this->count++;
+
+        return TRUE;
+
     }
-	}
-	
-	// Remove a node at the end of the list
-	public function remove()
-	{
-		if ( $this->_firstNode !== NULL ) {
-			if ( $this->_firstNode->next === NULL ) {
-				$this->_firstNode = NULL;
-			} else {
-				$previous = NULL;
-				$current = $this->_firstNode;
 
-				while ( $current->next !== NULL ) {
-					$previous = $current;
-					$current = $current->next;
-				}
+    // Add a node at the specified index
+    public function addAtIndex($value, $index)
+    {
+        $newNode = new ListNode($value);
 
-				$previous->next = NULL;
+        if($index == 0){
 
-				$this->_count--;
-			}
+        }elseif($this->sizeof()<$index){
+            throw new Exception("Invalid Index");
+        }
+        else{
 
-			return TRUE;
-		}
+            $current = $this->first;
+            $previous = $this->first;
 
-		return FALSE;
-		
-	}
-	
-	// Remove a node at the specified index
-	public function removeAtIndex($index)
-	{
-		if($this->sizeof()<$index){
-   			throw new Exception("Invalid Index");
-   		}
-		 $currentNode = $this->_firstNode;
-			for($i = 0; $i < $index; $i++ ){
-			if($i == $index-1){
-			$toBeRemovedReference = $currentNode->next;
-			$currentNode->next = $toBeRemovedReference->next;
+            for($i=0;$i<$index;$i++)
+            {
+                $previous = $current;
+                $current = $current->next;
+            }
 
-			if($toBeRemovedReference->next == NULL){ // If it is last node ,update instance
-			// variable
-			$this->_current = $currentNode;
+            $previous->next = $newNode;
+            $newNode->next = $current;
+            $this->count++;
+        }
+    }
 
-			}
-			$this->_count--;	
-			}
-			$currentNode = $currentNode->next;
-			}	
-	}
-	
-	// Return the value of the first node
-	public function getNode()
-	{
-		return $this->getNodeAtIndex(0);
-		
-	}
-	
-	// Return the value of the node at the specified index
-	public function getNodeAtIndex($index)
-	{
-		if($this->sizeof()<$index){
-   			throw new Exception("Invalid Index");
-   		}
-   		
-		if ( $this->_firstNode !== NULL && $index <= $this->_count ) {
-			$current = $this->_firstNode;
+    // Remove a node at the end of the list
+    public function remove()
+    {
+        if ( $this->first !== NULL ) {
+            if ( $this->first->next === NULL ) {
+                $this->first = NULL;
+            } else {
+                $previous = NULL;
+                $current = $this->first;
 
-			for ( $i = 0; $i < $index; $i++ ) {
-				$current = $current->next;
-			}
+                while ( $current->next !== NULL ) {
+                    $previous = $current;
+                    $current = $current->next;
+                }
 
-			return $current->value;
-		}
+                $previous->next = NULL;
 
-		return FALSE;
-		
-	}
-	
+                $this->count--;
+            }
 
-	// Return the number of nodes
-	public function sizeOf()
-	{
-		return $this->_count;
-	}
-	
-	// Return the list as string
-	public function toString()
-	{
-		$list = "";
-		$node = $this->_firstNode;
-		
-		while ($node != null) {
-			$list .= $node->toString();
-			$node = $node->next;
-		}
-		
-		return $list;
-	}
+            return TRUE;
+        }
 
-		/*
-	 * Iterator Implementation
-	 */
-	public function rewind() {
-		$this->_position = 0;
-		$this->_current = $this->_firstNode;
-	}
+        return FALSE;
 
-	public function current() {
-		return $this->_current->data;
-	}
+    }
 
-	public function key() {
-		return $this->_position;
-	}
+    // Remove a node at the specified index
+    public function removeAtIndex($index)
+    {
+        if($this->sizeof()<$index){
+            throw new Exception("Invalid Index");
+        }
+        $currentNode = $this->first;
+        for($i = 0; $i < $index; $i++ ){
+            if($i == $index-1){
+                $reference = $currentNode->next;
+                $currentNode->next = $reference->next;
 
-	public function next() {
-		$this->_position++;
-		$this->_current = $this->_current->next;
-	}
+                if($reference->next == NULL){
+                    $this->current = $currentNode;
 
-	public function valid() {
-		return $this->_current !== NULL;
-	}
+                }
+                $this->count--;
+            }
+            $currentNode = $currentNode->next;
+        }
+    }
+
+    // Return the value of the first node
+    public function getNode()
+    {
+        return $this->getNodeAtIndex(0);
+
+    }
+
+    // Return the value of the node at the specified index
+    public function getNodeAtIndex($index)
+    {
+        if($this->sizeof()<$index){
+            throw new Exception("Invalid Index");
+        }
+
+        if ( $this->first !== NULL && $index <= $this->count ) {
+            $current = $this->first;
+
+            for ( $i = 0; $i < $index; $i++ ) {
+                $current = $current->next;
+            }
+
+            return $current->value;
+        }
+
+        return FALSE;
+
+    }
+
+
+    // Return the number of nodes
+    public function sizeOf()
+    {
+        return $this->count;
+    }
+
+    // Return the list as string
+    public function toString()
+    {
+        $list = "";
+        $node = $this->first;
+
+        while ($node != null) {
+            $list .= $node->toString();
+            $node = $node->next;
+        }
+
+        return $list;
+    }
+
+
 }
